@@ -13,9 +13,10 @@ Visualization on Tableau: https://public.tableau.com/app/profile/rosny.antenor/v
 
 # Data Source and Files
 - Original Data: https://mavenanalytics.io/data-playground/movie-ratings
-- 
+- filtered_data.csv: dataset after being filtered and modified on excel
 - _Projects_Movie_Ratings.ipynb: Jupyter Notebook file using python to organize the data
 - fixed_movie_rating_data.csv: Dataset exported after being cleaned on python
+- thought process: my logic while making the project, as well as extra mistakes and thoughts I had during it
 
 Below is a summarized version of my process throughout doing this project. For the full thing, which is messier, but shows it more truthfully, the file will be provided as "thought process.txt"
 
