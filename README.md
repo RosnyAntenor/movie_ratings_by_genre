@@ -11,9 +11,11 @@ Visualization on Tableau: https://public.tableau.com/app/profile/rosny.antenor/v
 
 <img width="1854" height="814" alt="Dashboard" src="https://github.com/user-attachments/assets/6c262d29-ad67-434b-8d9d-6977806fe181" />
 
-- Data Source from Maven Analytics
-  
-Link: https://mavenanalytics.io/data-playground/movie-ratings
+# Data Source and Files
+- Original Data: https://mavenanalytics.io/data-playground/movie-ratings
+- 
+- _Projects_Movie_Ratings.ipynb: Jupyter Notebook file using python to organize the data
+- fixed_movie_rating_data.csv: Dataset exported after being cleaned on python
 
 Below is a summarized version of my process throughout doing this project. For the full thing, which is messier, but shows it more truthfully, the file will be provided as "thought process.txt"
 
