@@ -1,0 +1,206 @@
+Movie Ratings by Genre
+
+I want to check how well rated movies are by genre
+
+I went to Maven Analytics and took a data set for ratings of several movies from Rotten Tomatoes
+
+Link: https://mavenanalytics.io/data-playground/movie-ratings
+---------------------------------------------------
+
+IN EXCEL 
+
+First in Excel, I made sure the columns were aligned and assigned correctly, which they were not. I found this out because filtering the ratings will sometimes give leftover information. It seems like some descriptions would continue onto the later cells, misaligning data, so I went in and aligned the rows with the correct column
+
+I decided not to include rows without an audience rating, as I would like to prioritize and highlight difference in opinion between critics and audiences.
+
+I changed the date to a date type, and organized it so that all dates were in mm/dd/yyyy format, since some were in mm-dd-yy. 
+
+Furthermore, some dates had years between 2030 to 2050, and I assumed those were dates that automated to be in the 2000s instead of the 1900s, so I went in and changed that as well. I sped the process by using find and replace are corresponding each decade (replace '203' with '193', then '204' with '194'. This was also done with the 2020s because all of them were labeled as 'classic' in genre and the streaming date would go back decades otherwise, but not the 2010s, so there may be a few errors in that aspect. 
+
+I removed the '&' in the genre column to make future separation easier for me, do I may reconsider in the future
+
+I will note there were cells that were empty in genre that I will still use
+
+---------------------------------------------------
+
+After I assumed I cleaned up the data as well as I could, while in excel, I removed the columns I assumed I would not need for my analysis
+
+Removed:
+
+- movie_info: synopsis of the movie, irrelevant for data, and like partially deleted with the aligning from earlier
+
+- consensus: synopsis of the review given to the movie. Also irrelevant to the data. Furthermore, several rows are null, which also partially caused the misaligning
+
+- directors: directors of the movie, not necessarily irrelevant, but isn't what I want to check
+
+- writers: writers of the movie, not necessarily irrelevant, but isn't what I want to check
+
+- cast: actors in the movie, not necessarily irrelevant, but isn't what I want to check
+
+- studio_name: name of the studio publishing/distributing/financing the movie, not relevant to what I want to learn
+
+
+Kept in:
+
+- movie_title: title of the movie
+
+- rating: age rating for the movie (R, PG, NR, etc.)
+
+- genre: genre of the movie, can include multiple tags (Romance, Comedy, Drama)
+
+- in_theaters_date: the date the movie began showing in theaters
+
+- on_streaming_date: the date the movie came to streaming
+
+- runtime_in_minutes: how long the movie lasts in minutes
+
+- tomatometer_status: Represents the percentage of positive professional critic reviews. Fresh, Rotten, and Certified Fresh
+
+- tomatometer_rating: average rating between professional critics
+
+- tomatometer_count: amount of critics who rated the film
+
+- audience_rating: average rating between non critics
+
+- audience_count: amount of non critics who rated the film
+
+
+I am making a note here that most of the errors that the csv file were due to an error on my pat in opening the file in Only Office as oppose to Excel. However, this was only regarding the alignment issue, and I did fix it all anyway.
+
+---------------------------------------------------
+
+IN PYTHON
+
+Afterwards, I moved to Python to begin getting some more general data, but first, I need to reclean it to check anything I may have missed while cleaning in Excel.
+
+First thing I noticed was that the deleted rows were still counted as rows when transferred, causing a few hundred fully null rows, so I dropped them all by checking which ones didn't have a movie title.
+
+I changed the formatting of the audience count to be in normal notation instead of scientific since that's more appealing to look at
+
+The next thing I noticed when looking over some information is that the minimum for runtimes was at 1 minute, so I went in and changed the runtimes to official times, or at least, what Google says. My problem then went to movies with a 2 minute runtime, so I opted to go in any movie under 15 minutes, and it was also here where I learned that short films were counted, as there is a film spanning about 14 minutes called "blind date" from 2009. I stopped here as the list now gave an accurate minimum of 5 minutes runtime for the movie "Maestro".
+
+I did the same thing with the max by checking for anything above 450, since they was a 497 minute movie, and was then met with a 2000 minute movie, likely an error with the date since the theaters release was in 2000. Anyways, I went through the same process until I found a maximum that was correct to the movie in was connected to, That being "Carlos", which was approximately correct at 333 minutes. I assume it's a different cut that slightly shortens it.
+
+Next was the genres, as mentioned earlier, I kept some null, and simply fill them in here. I did it here because I find it more efficient here than with Excel, especially since I may be able to check for other missing data, like a blank cell ('') that wouldn't count as null since it has whitespace
+
+I filled in each one. 
+
+I will note that I did not include any genres that were not already in another movie for example, "All the Way" and "Cross of Iron" were described as a Drama/Biography and War/Drama respectively, but "Biography" and "War" are not in any of the prefilled genres, so neither tag were included, and both were marked as just "Drama". 
+
+Furthermore, certain tags are always included together with an '&' sign in the original table of data, but are not always together on the rotten tomatoes site itself, such as Action & Adventure, or Science Fiction (Sci-fi) & Fantasy, so for consistency, those tags will always be added together, even if they are not necessarily marked on the site. For example, "Batman vs. Two-Face" is put as Action/Comedy/Animation on Rotten Tomatoes, but will have it's genre as Action/Adventure/Comedy/Animation. It was also here where I decided to revert the change in excel to have those genres separated by comma instead of the ampersand (&)
+
+For future reference, these are the genres in question
+
+Action & Adventure
+Animation
+Anime & Manga
+Art House & International
+Classics
+Comedy
+Cult Movies
+Documentary
+Drama
+Faith & Spirituality
+Gay & Lesbian
+Horror
+Kids & Family
+Musical & Performing Arts
+Mystery & Suspense
+Romance
+Science Fiction & Fantasy
+Special Interest
+Sports & Fitness
+Television
+Western
+
+Next, I used a seaborn line plot to understand the data, or tried to before waiting for 2 minutes only to get a line plot that had every combination of genres, because I forgot to count each genre separately, so a movie with the tags "Action & Adventure, Comedy" is separate from a movie titled, "Action & Adventure, Drama". I went and exploded the rows so each movie would count once towards the respective column. 
+
+I also made a year column to make the visual a bit cleaner as well. That ended up breaking the years to years in the 2050s again, so I had to use NumPy to get it back to normal quickly
+
+It's worth noting that not every movie got a release in theaters, and the span of years for streaming dates is shorter, so I will likely prioritize streaming
+
+Within the visual of streaming, there was a movie released on streaming apparently in 1935, so I fixed that, but I assumed theater dates were correct since they could be released in their span
+
+Now, I finally begin a few visuals. I made a heatmap, though, predictably, it showed no insightful correlations between the ratings and any other numerical value, the closest being audience ratings and critic ratings together
+
+------------------------------------------------------------------
+
+Since I assumed I could only get the specifics with something more specialized, I moved to Tableau. There's only a few thing I want to check anyway
+
+
+OVERALL RATINGS: AUDIENCE VS CRITICS
+
+I decided to start by checking the average audience and critic ratings for all movies overall over time. Though it's here where I realized that Rotten Tomatoes obviously did not exist back in the 1950s, so the title of "over time" should likely be taken with a grain of salt, but there is an interesting pattern where the critics seem more positive of older movies, consistently giving higher average ratings compare to the normal people for movies before the 1960s, before switching sides, with audiences liking  movies more overall from the 1960s onwards. Though, both show a general downwards trend from beginning to end, so there is more positivity for older movies than newer ones. 
+
+This data is likely a result of the amount of people posting reviews over time. Naturally, modern movies will get more reviews than older ones, so those ratings will bee less extreme and more nuanced, leading to a more balanced rating, where as most reviews for older movies come from people who have already heard of it, likely fans, and classics, explaining the higher critic scores for movies from before the 1960s as well.
+
+RATINGS BY GENRE
+
+For the main part of this project, I checked the ratings by genres, and noted as much as I could find interesting
+
+Starting with the average ratings by genre, across approximately 16400 total movies spanning 21 genres:
+
+
+AUDIENCE AVERAGE
+
+Action & Adventure - 57.69
+Animation - 64.95
+Anime & Manga - 71.5
+Art House & International - 66.62
+Classics - 71.41
+Comedy - 58.21
+Cult Movies - 56.26
+Documentary - 72.93
+Drama - 63.11
+Faith & Spirituality - 70.43
+Gay & Lesbian - 60.26
+Horror - 46.37
+Kids & Family - 60.02
+Musical & Performing Arts - 71.12
+Mystery & Suspense - 54.01
+Romance - 63.59
+Science Fiction & Fantasy - 56.31
+Special Interest - 71.96
+Sports & Fitness - 73.47
+Television - 66.39
+Western - 64.56
+
+
+CRITIC AVERAGE
+
+Action & Adventure - 53.99
+Animation - 63.13
+Anime & Manga - 69.19
+Art House & International - 70.81
+Classics - 79.19
+Comedy - 54.56
+Cult Movies - 60.85
+Documentary - 80.44
+Drama - 63.01
+Faith & Spirituality - 64.62
+Gay & Lesbian - 56.65
+Horror - 50.84
+Kids & Family - 55.03
+Musical & Performing Arts - 71.24
+Mystery & Suspense - 55.12
+Romance - 60.56
+Science Fiction & Fantasy - 55.31
+Special Interest - 77.52
+Sports & Fitness - 70.72
+Television - 71.98
+Western - 68.79
+
+As per human tradition, most of the ratings go around the 60-70 range, but there are a few notable outliers I want to address:
+
+Horror: I'm not too surprised horror is the lowest across both spectrums considering how easy it is to make and mess up a horror movie relative to most genres, as well as how common the genre is, causing the more positively reviewed movies to get balanced out, similarly to how action/adventure is the 5th and 2nd lowest rated for audiences and critics.
+
+(On the audience side) Sports & Fitness: This was the highest for audiences, beating out Documentaries by just over half a percent. This is likely due to how few movies there are for the category, not even reaching 200 compared to 1840 documentaries and the 1200 Special interest movies, which were 2nd and 3rd respectively for audience ratings. Speaking of which...
+
+(On the critics side) Documentary/Classics/Special Interest: The only 3 categories to reach over 75, with Documentaries in particular going over 80. There are far ahead of the rest too, with Special Interest beating the next category (Television) by over 5 percent. It's nothing too surprising though, likely to be accredited to the "acquired" taste that one may have as a critic compared to being a fan causing films like these to skyrocket in acclaim.
+
+--------------------------------------------------------------------
+
+HOW TO UTILIZE THIS DATA
+
+It makes no sense to say "just make a documentary" and classics and special interest films are usually special cases, so the way I may utilize this data is to understand how often people fail at certain genres, as well as how many eyes will be on a movie based on genre. 
+
